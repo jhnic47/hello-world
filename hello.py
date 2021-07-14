@@ -1,1 +1,25 @@
-print("Hello World!")
+#!/usr/bin/env python3
+import requests
+from bs4 import BeautifulSoup
+
+
+class FBGroupScraper:
+
+    def __init__(self, group_id):
+        self.group_id = group_id
+        self.page_url = "https://mobile.facebook.com/groups/" + self.group_id
+        self.page_content = ""
+
+    def get_page_content(self):
+        self.page_content = requests.get(self.page_url).text
+
+    def parse(self):
+        soup = BeautifulSoup(self.page_content, "html.parser")
+        feed_container = soup.find(id="m_group_stories_container").find_all("anytime")
+        for i in feed_container:
+            print(i.text)
+
+group_id = "1409090942701446"
+d = FBGroupScraper(group_id)
+d.get_page_content()
+d.parse()
